@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Happy Birthday, My Love</title>
+  <meta name="description" content="A cinematic birthday celebration made just for you." />
+
+  <!-- Google Fonts: Poppins for body/UI, Great Vibes for romantic cursive headings -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- AOS (Animate On Scroll) -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Reduced motion respected globally via CSS + JS checks -->
+
+  <!-- ================= AMBIENT BACKGROUND (shared by whole page) ================= -->
+  <div class="ambient" aria-hidden="true">
+    <div class="blob blob--one"></div>
+    <div class="blob blob--two"></div>
+    <div class="blob blob--three"></div>
+    <div id="stars" class="stars-layer"></div>
+    <div id="hearts" class="hearts-layer"></div>
+  </div>
+
+  <!-- Custom cursor -->
+  <div id="cursor-dot" class="cursor-dot" aria-hidden="true"></div>
+  <div id="cursor-trail" class="cursor-trail" aria-hidden="true"></div>
+
+  <!-- ================= HERO SECTION ================= -->
+  <header class="hero" id="hero">
+    <div class="hero__content">
+      <div class="hero__heart" aria-hidden="true">❤️</div>
+
+      <p class="hero__eyebrow">
+        <span id="typed-text" class="hero__typed"></span><span class="typed-cursor" aria-hidden="true">|</span>
+      </p>
+
+      <h1 class="hero__name" id="her-name">Your Love</h1>
+
+      <p class="hero__wish" data-fade-word>
+        Advance Happy Birthday, Saru ❤️<br />Counting down the days to celebrate you.
+      </p>
+
+      <button class="btn-enter" id="enter-btn" aria-label="Enter the birthday celebration and scroll to the next section">
+        <span class="btn-enter__label">❤️ Enter ❤️</span>
+      </button>
+    </div>
+
+    <a href="#counter" class="scroll-hint" aria-hidden="true">
+      <span class="scroll-hint__dot"></span>
+    </a>
+  </header>
+
+  <!-- ================= LOVE COUNTER SECTION ================= -->
+  <main>
+
+    <!-- ================= BIRTHDAY COUNTDOWN SECTION ================= -->
+    <section class="bday-section" id="bday-countdown" aria-labelledby="bday-heading">
+      <h2 class="bday-heading" id="bday-heading" data-aos="fade-up" data-aos-duration="1000">
+        🎂 Advance Happy Birthday, Saru Bala!
+      </h2>
+      <p class="bday-sub" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
+        Your special day <strong>July 27</strong> is almost here — here's the countdown:
+      </p>
+
+      <div class="bday-grid" role="group" aria-label="Countdown to birthday">
+        <div class="bday-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="0">
+          <span class="bday-card__value" id="bday-days">00</span>
+          <span class="bday-card__label">Days</span>
+        </div>
+        <div class="bday-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
+          <span class="bday-card__value" id="bday-hours">00</span>
+          <span class="bday-card__label">Hours</span>
+        </div>
+        <div class="bday-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+          <span class="bday-card__value" id="bday-minutes">00</span>
+          <span class="bday-card__label">Minutes</span>
+        </div>
+        <div class="bday-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+          <span class="bday-card__value" id="bday-seconds">00</span>
+          <span class="bday-card__label">Seconds</span>
+        </div>
+      </div>
+
+      <p class="bday-footnote" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+        Get ready to celebrate the most amazing person I know 💕
+      </p>
+    </section>
+
+    <!-- ================= PHOTO SECTION ================= -->
+    <section class="photo-section" id="photo" aria-labelledby="photo-heading">
+      <h2 class="photo-heading" id="photo-heading" data-aos="fade-up" data-aos-duration="1000">
+        For My Saru Bala
+      </h2>
+
+      <div class="photo-frame" data-aos="zoom-in" data-aos-duration="1000" data-aos-delay="100">
+        <img
+          id="lover-photo"
+          src="./assets/lover-photo.jpeg"
+          alt="A photo of Saru Bala"
+          onerror="this.parentElement.classList.add('photo-frame--empty')"
+        />
+        <div class="photo-frame__fallback" aria-hidden="true">
+          <span>📷</span>
+          <p>Add her photo as<br /><code>assets/lover-photo.jpg</code></p>
+        </div>
+      </div>
+
+      <p class="photo-caption" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+        Every picture of you is my favorite one.
+      </p>
+    </section>
+
+    <!-- ================= QUOTES SECTION ================= -->
+    <section class="quotes-section" id="quotes" aria-labelledby="quotes-heading">
+      <h2 class="quotes-heading" id="quotes-heading" data-aos="fade-up" data-aos-duration="1000">
+        💌 Words For You
+      </h2>
+
+      <div class="quotes-grid">
+        <blockquote class="quote-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="0">
+          <p>"Another year older, but you keep getting more beautiful and more loved."</p>
+        </blockquote>
+        <blockquote class="quote-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
+          <p>"Happy advance birthday to the girl who turned my ordinary days into favorite memories."</p>
+        </blockquote>
+        <blockquote class="quote-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+          <p>"May your birthday be as sweet, warm, and wonderful as you make every day feel to me."</p>
+        </blockquote>
+        <blockquote class="quote-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+          <p>"Before the world wishes you, let me be the first: happy birthday, my everything."</p>
+        </blockquote>
+      </div>
+    </section>
+
+    <section class="counter-section" id="counter" aria-labelledby="counter-heading">
+      <h2 class="counter-heading" id="counter-heading" data-aos="fade-up" data-aos-duration="1000">
+        💕 We've Been Together For
+      </h2>
+
+      <div class="counter-grid" role="group" aria-label="Time together counter">
+
+        <div class="counter-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="0">
+          <span class="counter-card__value" id="count-years">0</span>
+          <span class="counter-card__label">❤️ Years</span>
+        </div>
+
+        <div class="counter-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
+          <span class="counter-card__value" id="count-months">0</span>
+          <span class="counter-card__label">❤️ Months</span>
+        </div>
+
+        <div class="counter-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+          <span class="counter-card__value" id="count-days">0</span>
+          <span class="counter-card__label">❤️ Days</span>
+        </div>
+
+        <div class="counter-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+          <span class="counter-card__value" id="count-hours">00</span>
+          <span class="counter-card__label">❤️ Hours</span>
+        </div>
+
+        <div class="counter-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+          <span class="counter-card__value" id="count-minutes">00</span>
+          <span class="counter-card__label">❤️ Minutes</span>
+        </div>
+
+        <div class="counter-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="500">
+          <span class="counter-card__value" id="count-seconds">00</span>
+          <span class="counter-card__label">❤️ Seconds</span>
+        </div>
+
+      </div>
+
+      <p class="counter-footnote" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="600">
+        Every second with you is a second worth counting.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Made with <span aria-hidden="true">❤️</span><span class="sr-only">love</span> for you.</p>
+  </footer>
+
+  <!-- ================= LIBRARIES (CDN) ================= -->
+  <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
