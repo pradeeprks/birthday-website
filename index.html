@@ -16,9 +16,31 @@
 
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="is-locked">
 
   <!-- Reduced motion respected globally via CSS + JS checks -->
+
+  <!-- ================= PASSWORD LOCK SCREEN ================= -->
+  <div class="lock-screen" id="lock-screen" role="dialog" aria-modal="true" aria-labelledby="lock-heading">
+    <div class="lock-card">
+      <div class="lock-card__heart" aria-hidden="true">🎁</div>
+      <h2 class="lock-heading" id="lock-heading">Welcome to Your<br />Special Gift</h2>
+      <p class="lock-sub">Please enter the 4-digit password to continue</p>
+
+      <form class="lock-form" id="lock-form" autocomplete="off">
+        <div class="lock-digits" id="lock-digits">
+          <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="lock-digit" aria-label="Digit 1" required />
+          <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="lock-digit" aria-label="Digit 2" required />
+          <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="lock-digit" aria-label="Digit 3" required />
+          <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="lock-digit" aria-label="Digit 4" required />
+        </div>
+
+        <p class="lock-error" id="lock-error" role="alert" aria-live="polite"></p>
+
+        <button type="submit" class="lock-submit">Unlock</button>
+      </form>
+    </div>
+  </div>
 
   <!-- ================= AMBIENT BACKGROUND (shared by whole page) ================= -->
   <div class="ambient" aria-hidden="true">
@@ -44,7 +66,7 @@
 
       <h1 class="hero__name" id="her-name">Your Love</h1>
 
-      <p class="hero__wish" data-fade-word>
+      <p class="hero__wish" id="hero-wish-line" data-fade-word>
         Advance Happy Birthday, Saru ❤️<br />Counting down the days to celebrate you.
       </p>
 
@@ -66,7 +88,7 @@
       <h2 class="bday-heading" id="bday-heading" data-aos="fade-up" data-aos-duration="1000">
         🎂 Advance Happy Birthday, Saru Bala!
       </h2>
-      <p class="bday-sub" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
+      <p class="bday-sub" id="bday-sub" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
         Your special day <strong>July 27</strong> is almost here — here's the countdown:
       </p>
 

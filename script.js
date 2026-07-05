@@ -4,6 +4,7 @@
 const HER_NAME = "Saru Bala K";
 const LOVE_START_DATE = "2026-03-27 00:00:00"; // format: "YYYY-MM-DD HH:mm:ss"
 const BIRTHDAY_DATE = "2026-07-27 00:00:00"; // her birthday — format: "YYYY-MM-DD HH:mm:ss"
+const SITE_PASSWORD = "2707"; // 4-digit password she needs to enter to unlock the site
 
 /* =========================================================
    SETUP
@@ -13,6 +14,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("her-name").textContent = HER_NAME;
 
+  initLockScreen();
   initTypedGreeting();
   initAOS();
   createStars(90);
@@ -25,20 +27,127 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =========================================================
-   TYPED.JS — "Happy Birthday My Love ❤️" typing animation
+   PASSWORD LOCK SCREEN — 4-digit gate before the gift reveals
    ========================================================= */
+function initLockScreen() {
+  const lockScreen = document.getElementById("lock-screen");
+  const form = document.getElementById("lock-form");
+  const digitsWrap = document.getElementById("lock-digits");
+  const errorEl = document.getElementById("lock-error");
+  const digits = Array.from(document.querySelectorAll(".lock-digit"));
+
+  if (!lockScreen || !form || !digits.length) return;
+
+  // Already unlocked earlier this session? Skip straight to the site.
+  if (sessionStorage.getItem("giftUnlocked") === "true") {
+    unlock();
+    return;
+  }
+
+  digits[0].focus();
+
+  digits.forEach((input, index) => {
+    input.addEventListener("input", () => {
+      input.value = input.value.replace(/[^0-9]/g, "").slice(0, 1);
+      if (input.value && index < digits.length - 1) {
+        digits[index + 1].focus();
+      }
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && !input.value && index > 0) {
+        digits[index - 1].focus();
+      }
+    });
+
+    input.addEventListener("paste", (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData("text").replace(/[^0-9]/g, "");
+      pasted.slice(0, digits.length).split("").forEach((char, i) => {
+        if (digits[i]) digits[i].value = char;
+      });
+      const nextEmpty = digits.find((d) => !d.value);
+      (nextEmpty || digits[digits.length - 1]).focus();
+    });
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const entered = digits.map((d) => d.value).join("");
+
+    if (entered.length < digits.length) {
+      showError("Please enter all 4 digits.");
+      return;
+    }
+
+    if (entered === SITE_PASSWORD) {
+      sessionStorage.setItem("giftUnlocked", "true");
+      unlock();
+    } else {
+      showError("That's not quite right — try again.");
+      digitsWrap.classList.remove("is-shake");
+      requestAnimationFrame(() => digitsWrap.classList.add("is-shake"));
+      digits.forEach((d) => (d.value = ""));
+      digits[0].focus();
+    }
+  });
+
+  function showError(message) {
+    errorEl.textContent = message;
+  }
+
+  function unlock() {
+    lockScreen.classList.add("is-hidden");
+    document.body.classList.remove("is-locked");
+    if (!prefersReducedMotion && typeof confetti !== "undefined") {
+      confetti({
+        particleCount: 70,
+        spread: 70,
+        startVelocity: 28,
+        origin: { y: 0.4 },
+        colors: ["#FF5EA8", "#B388FF", "#FFD6EC", "#ffffff"],
+        scalar: 0.85,
+      });
+    }
+    setTimeout(() => lockScreen.remove(), 700);
+  }
+}
+
+/* =========================================================
+   TYPED.JS — greeting typing animation
+   Automatically switches from "Advance Happy Birthday" to
+   "Happy Birthday" once it's actually her birthday.
+   ========================================================= */
+function isTodayHerBirthday() {
+  const target = new Date(BIRTHDAY_DATE.replace(" ", "T"));
+  if (isNaN(target.getTime())) return false;
+  const now = new Date();
+  return now.getMonth() === target.getMonth() && now.getDate() === target.getDate();
+}
+
 function initTypedGreeting() {
+  const isBdayToday = isTodayHerBirthday();
+  const greetingLine = isBdayToday ? "Happy Birthday" : "Advance Happy Birthday";
+
+  // Also update the wish line beneath her name to match
+  const wishEl = document.getElementById("hero-wish-line");
+  if (wishEl) {
+    wishEl.innerHTML = isBdayToday
+      ? "Happy Birthday, Saru ❤️<br />Today is all about celebrating you."
+      : "Advance Happy Birthday, Saru ❤️<br />Counting down the days to celebrate you.";
+  }
+
   if (prefersReducedMotion || typeof Typed === "undefined") {
-    document.getElementById("typed-text").textContent = "Happy Birthday My Love ❤️";
+    document.getElementById("typed-text").textContent = `${greetingLine} My Love ❤️`;
     return;
   }
 
   new Typed("#typed-text", {
-    strings: ["Advance Happy Birthday", "My Love ❤️"],
-    typeSpeed: 55,
-    backSpeed: 30,
+    strings: [greetingLine, "My Love ❤️"],
+    typeSpeed: 50,
+    backSpeed: 26,
     backDelay: 1400,
-    startDelay: 300,
+    startDelay: 200,
     loop: true,
     smartBackspace: true,
   });
@@ -248,6 +357,7 @@ function initLoveCounter() {
 
 /* =========================================================
    BIRTHDAY COUNTDOWN — days/hours/min/sec until her birthday
+   Automatically flips into a celebration state on the day itself.
    ========================================================= */
 function initBirthdayCountdown() {
   const target = new Date(BIRTHDAY_DATE.replace(" ", "T"));
@@ -262,11 +372,16 @@ function initBirthdayCountdown() {
     hours: document.getElementById("bday-hours"),
     minutes: document.getElementById("bday-minutes"),
     seconds: document.getElementById("bday-seconds"),
+    heading: document.getElementById("bday-heading"),
+    sub: document.getElementById("bday-sub"),
+    grid: document.querySelector(".bday-grid"),
+    footnote: document.querySelector(".bday-footnote"),
   };
 
   if (!els.days || !els.hours || !els.minutes || !els.seconds) return;
 
   const previous = { days: null, hours: null, minutes: null, seconds: null };
+  let celebrationFired = false;
 
   function pad(n) {
     return String(n).padStart(2, "0");
@@ -287,8 +402,36 @@ function initBirthdayCountdown() {
     return next;
   }
 
+  function enterCelebrationMode() {
+    if (els.heading) els.heading.textContent = "🎉 Happy Birthday, Saru Bala! 🎉";
+    if (els.sub) els.sub.innerHTML = "Today is your day — hope it's as wonderful as you are.";
+    if (els.grid) els.grid.style.display = "none";
+    if (els.footnote) els.footnote.textContent = "I'm so lucky to celebrate you today 💕";
+
+    if (!celebrationFired) {
+      celebrationFired = true;
+      fireConfetti();
+    }
+  }
+
+  function exitCelebrationMode() {
+    if (els.heading) els.heading.textContent = "🎂 Advance Happy Birthday, Saru Bala!";
+    if (els.sub) els.sub.innerHTML = 'Your special day <strong>July 27</strong> is almost here — here\'s the countdown:';
+    if (els.grid) els.grid.style.display = "";
+    if (els.footnote) els.footnote.textContent = "Get ready to celebrate the most amazing person I know 💕";
+    celebrationFired = false;
+  }
+
   function tick() {
     const now = new Date();
+
+    if (isTodayHerBirthday()) {
+      enterCelebrationMode();
+      return;
+    }
+
+    exitCelebrationMode();
+
     const next = getNextOccurrence(now);
     let diffMs = next.getTime() - now.getTime();
 
